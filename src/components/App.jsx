@@ -8,33 +8,30 @@ function App() {
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
 
-useEffect(() => {
+  useEffect(() => {
     const savedContacts = localStorage.getItem('contacts');
     if (savedContacts) {
-      setContacts (JSON.parse(savedContacts));
+      setContacts(JSON.parse(savedContacts));
     }
-}, []);
-  
-useEffect(() => {
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
-}, [contacts]);
-  
-  handleAddContact = newContact => {
-    if (this.handleGetUniqueContacts(newContact.name)) {
-      this.setState(prevState => ({
-        contacts: [...prevState.contacts, newContact],
-      }));
+  }, [contacts]);
+
+  const handleAddContact = newContact => {
+    if (handleGetUniqueContacts(newContact.name)) {
+      setContacts(prevContacts => [...prevContacts, newContact]);
     }
   };
 
-  handleRemoveContact = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
-    }));
+  const handleRemoveContact = id => {
+    setContacts(prevContacts =>
+      prevContacts.filter(contact => contact.id !== id)
+    );
   };
 
-  handleGetUniqueContacts = name => {
-    const { contacts } = this.state;
+  const handleGetUniqueContacts = name => {
     const isExistContact = !!contacts.find(contact => contact.name === name);
 
     if (isExistContact) {
@@ -44,35 +41,30 @@ useEffect(() => {
     return !isExistContact;
   };
 
-  handleFilterChange = value => {
-    this.setState({ filter: value });
+  const handleFilterChange = value => {
+    setFilter(value);
   };
 
-  getVisibleContacts = () => {
-    const { contacts, filter } = this.state;
+  const getVisibleContacts = () => {
     return contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
   };
 
-  render() {
-    const { filter } = this.state;
-    const visibleContacts = this.getVisibleContacts();
+  const visibleContacts = getVisibleContacts();
 
-    return (
-      <div className={styles.container}>
-        <h2 className={styles.formTitle}>Form Contact</h2>
-        <ContactForm
-          onAdd={this.handleAddContact}
-          getUniqueContacts={this.handleGetUniqueContacts}
-        />
-        <h2 className={styles.formTitle}>Contact List</h2>
-        <Filter filter={filter} onChange={this.handleFilterChange} />
-        <ContactsList
-          contacts={visibleContacts}
-          onRemove={this.handleRemoveContact}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className={styles.container}>
+      <h2 className={styles.formTitle}>Form Contact</h2>
+      <ContactForm
+        onAdd={handleAddContact}
+        getUniqueContacts={handleGetUniqueContacts}
+      />
+      <h2 className={styles.formTitle}>Contact List</h2>
+      <Filter filter={filter} onChange={handleFilterChange} />
+      <ContactsList contacts={visibleContacts} onRemove={handleRemoveContact} />
+    </div>
+  );
 }
+
+export default App;
