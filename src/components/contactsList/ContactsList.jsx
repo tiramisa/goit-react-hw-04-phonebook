@@ -12,7 +12,7 @@ const ContactListItem = ({ id, name, phone, onRemove }) => {
   );
 };
 
-export const ContactsList = ({ contacts, onRemove }) => {
+const ContactsList = ({ contacts, onRemove }) => {
   if (contacts.length === 0) return null;
 
   return (
@@ -23,3 +23,5 @@ export const ContactsList = ({ contacts, onRemove }) => {
     </ul>
   );
 };
+
+export default ContactsList;
